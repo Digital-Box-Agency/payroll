@@ -1,5 +1,20 @@
 from . import __version__ as app_version
 
+def get_payroll_controller():
+	from frappe.model.base_document import get_controller
+	try:
+		PayrollEntry = get_controller("Payroll Entry")
+		return PayrollEntry
+	except ImportError:
+		try:
+			from erpnext.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry
+			return PayrollEntry
+		except (ModuleNotFoundError, ImportError):
+			from hrms.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry
+			return PayrollEntry
+
+
+PayrollEntry = get_payroll_controller()
 app_name = "payroll"
 app_title = "payroll"
 app_publisher = "Mohamed Abdulsalam"
@@ -8,6 +23,7 @@ app_icon = "octicon octicon-file-directory"
 app_color = "grey"
 app_email = "moha2016it@gmail.com"
 app_license = "MIT"
+
 
 # Includes in <head>
 # ------------------
@@ -31,7 +47,7 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Payroll Entry" : "public/js/payroll_entry.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -87,9 +103,9 @@ app_license = "MIT"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-#	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Payroll Entry": "employeewise_payroll.employeewise_payroll.payroll_entry.CustomPayrollEntry"
+}
 
 # Document Events
 # ---------------
